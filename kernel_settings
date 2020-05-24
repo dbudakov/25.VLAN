@@ -1,0 +1,44 @@
+ПАРАМЕТРЫ ЯДРА
+  https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt
+
+ARP отвечает по любому интерфейсу, чтобы отключить это:
+    sysctl -w net.ipv4.conf.all.arp_filter = 1
+    sysctl -w net.ipv4.conf.all.arp_ignore = 2
+
+Ассиметричный роутинг
+  sysctl -w net.ipv4.conf.<интерфейс>.rp_filter = 2
+
+Поддержка Zeroconf(один из параметров - автоматичесткое получение ip, если ничего не смог получить)
+  echo NOZEROCONF=yes >> /etc/sysconfig/network
+
+Проверка размера пакета подбором размека посылаемого пакета, linux всегда ставит DF (don't fragment) бит, который не позволяет пакетам фрагментироваться:
+  ping -s <size>
+
+Выставить MTU на интерфейсе
+
+Уменьшить TCP MSS - позволяем увеличить пропуск жирных TCP пакетов
+  iptables -I FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+
+TCP Window Size / Window Scaling - окно передачи
+  net.ipv4.tcp_window_scaling = 0(отключают на плохих каналах) влияет на параметр /proc/sys/net/ipv4/tcp_rmem
+
+  net.ipv4.tcp_wmem, net.ipv4.tcp_rmem  - настройки Read\Write буферов, это  три числа в БАЙТАХ, "min default max" - минимальный гарантированный размер буфера, р-р по умолчанию и макс. р-р, больше которого система  не даст буферу вырасти
+
+Socket backlog
+  https://linux.die.net/man/2/listen
+
+  /proc/sys/net/core/somaxconn  - р-р очереди установленных соединений ожидающих обработки accept()
+
+  /proc/sys/net/ipv4/tcp_max_syn_backlog - р-р очереди не установленных соединени
+
+Time wait
+  Период ожидания потерявшихся пакетов, когда сокет еще не закрыт. По-умолчанию = 2*MLS = 1 минута. На высоконагруженных системах можно уменьшить до 10-15 секунд, меньше не стоит
+    /proc/sys/net/ipv4/tcp_fin_timeout
+
+      Если вы всё равно испытываете трудности, то стоит добавить еще адресов для приёма и обработки трафика
+
+  Параметр, позволяющий переиспользовать сокеты для исходящиъ соединений
+    net.ipv4.tcp_tw_reuse = 0
+
+  На балансировщиках стоит еще увеличить диапазон портов, доступных для исходящих соединений
+    /proc/sys/net/ipv4/ip_local_port_range

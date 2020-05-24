@@ -1,0 +1,13 @@
+- name:
+  include_vars:
+    file: ../roles/vars/packages.yml
+
+- name: enable epel-release
+  template:
+    src: ../templates/epel.repo
+    dest: /etc/yum.repos.d/epel.repo
+
+- name: install packages
+  yum:
+    name: "{{ packages }}"
+    state: present

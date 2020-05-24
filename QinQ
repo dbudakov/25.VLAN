@@ -1,0 +1,11 @@
+QinQ
+QinQ(IEEE 802.1 QinQ) - расширение к стандарту IEEE 802.1Q, описывающее как тегированный трафик может передаваться внутри уже тегированного по 802.1Q трафика.
+
+  -эта технология имеет большое значение для построения Mtro Ethernet-сетей
+  -для использования QinQ-инкапсуляции требуется поддержка со стороны коммутатора
+
+vconfig set_name_type VLAN_PLUS_VID_NO_PAD
+vconfig add eth0 4
+ifconfig vlan4 10.1.1.1 netmask 255.255.255.0 up
+vconfig add vlan4 8
+ifconfig vlan8 192.168.1.1 netmask 255.255.255.0 up

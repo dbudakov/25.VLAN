@@ -1,0 +1,14 @@
+- name: deploy
+  hosts:
+    - centralRouter
+    - testClient1
+    - testServer1
+    - testClient2
+    - testServer2
+  become: true
+  gather_facts: false
+  roles:
+    - role: roles
+  tasks:
+    - include: ../roles/tasks/all.yml
+    - include: ../roles/tasks/{{ inventory_hostname }}.yml

@@ -1,0 +1,58 @@
+	iptables -t mangle -A PREROUTING -p tcp -i eth2 -j MARK --set-mark 11 # установка маркировки
+    iptables -t mangle -A PREROUTING -i eth4.8 -j MARK --set-mark 11
+
+  iptables -t forward
+	iptables -t mangle -A INPUT -m mark --mark 15  # идентификация по маркировке
+
+  iptable -t filter -A OUTPUT -m mark --mark 15
+    -A PREROUTING -p tcp -m mark --mark 15 -m DNAT  --dport 25271 -j DNAT --to-destination 5.5.5.5:25171
+
+  echo "1" > /proc/sys/net/ipv4/ip_forward
+
+  iptables -t mangle -A PREROUTING -p TCP --dport 22 -j TOS --set-tos 0x10
+  iptables -t mangle -A PREROUTING -i eth2.15 -j TOS --set-tos 0x10
+  iptables -j TOS -h
+
+ip route add default via 10.10.10.6 table 15
+ip rule add tos 0x10 table 15
+
+ip route show table 102
+
+ip route get 172.17.0.9 tos 0x02
+ip route add 10.10.10.254 via 10.10.10.6 table 15
+ip rule add from all tos 0x10 table 15
+iptables -t mangle -A PREROUTING -i eth2.15 -j TOS --set-tos 0x10
+iptables -t nat -A OUTPUT -i eth2.15 -j TOS --set-tos 0x10
+
+ip rule add from all fwmark 11 table 115
+ip route add 10.10.10.254 via 10.10.10.6 table 115
+
+http://www.simtreas.ru/~dzo/peremark/
+iptables -t mangle -A PREROUTING -p ICMP -j MARK --set-mark 11
+iptables -A PREROUTING -i eth0 -t mangle -p tcp --dport 25 -j MARK --set-mark 1
+    iptables -A PREROUTING -i eth2.15 -t mangle -p icmp -j MARK --set-mark 111
+
+iptables -t mangle -A PREROUTING -i eth2.15 -j MARK --set-mark 11
+iptables -t mangle -A PREROUTING -i eth2.15 -j CONNMARK --save-mark
+iptables -t mangle -A PREROUTING -i eth2.15 -j CONNMARK --restore-mark
+
+iptables -t nat -A PREROUTING -i eth2.15 -j CONNMARK --restore-mark
+
+
+
+vconfig add eth1 5
+ip add add 10.10.10.254/24 dev eth1.5
+ip link set up dev eth1.5
+
+
+ip ru add to 10.10.10.254 iif eth1.5,eth2.5  table 5
+ip ro add 10.10.10.1 via 10.10.10.5 dev eth1.5 table 5
+ip ro add 10.10.10.1 via 10.10.10.254 dev eth2.5 table 5
+
+
+РЕШЕНО
+ip ru add to 10.10.10.254 iif eth1.5 table 5
+ip ru add to 10.10.10.1 iif eth2.5 table 5
+
+ip ru add to 10.10.10.254 iif eth3.8 table 8
+ip ru add to 10.10.10.1 iif eth4.8 table 8

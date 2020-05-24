@@ -1,0 +1,66 @@
+Teaming - метод агрегации каналов в Linux.
+  - работает на уровне ядра
+  - позволяет объединить 2 и более сетевых интерфейса в один логический интерфейса
+  - ползоволяет обеспечить отказоустойчивость канала
+  - позволяет обеспечить распределение нагрузки и балансировку
+  - поозволяет увеличить пропускную способность
+
+  Таблица сравнения bonding'a и teaming'a
+    https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/sec-comparison_of_network_teaming_to_bonding
+
+Модуль для тиминга
+  lsmod|grep team
+
+Утилиты для настройки teaming'a:
+  teamdctl team0 state - утилита teaming'a
+  teamnl team0 ports - ?
+  bond2team --examples - перевод с bonding'a на teaming
+    bond2team --master bond0
+
+Настройка через NetworkManager
+  Просмотр сетевых интерфейсов
+    nmcli con
+
+  Задаем интерфейс bond0, задаем режим и ip-адрес
+    nmcli con add type team con-name team0 ipname team0 mode acteve-backup ip4 10.16.10.7/24
+
+  Добавляем сетевые интерфейсы в логический интерфейс
+    nmcli con add type team-slave ifname eth0 master team0
+    nmcli con add type team-slave ifname eth1 master team0
+
+  Последовательно поднимаем интерфейсы
+    nmcli con up team-slave-eth0
+    nmcli con up team-slave-eth1
+    nmcli connection up team0
+
+Настройка с помощью конфигов:
+  ## /etc/sysconfig/network-scripts/ifcfg-team0
+  DEVICE=team0
+  IPADDR=10.20.0.2
+  NETMASK=255.255.255.0
+  ONBOOT=yes
+  NM_CONTROLLES=no
+  USERCTL=no
+  BOOTPROTO=none
+  DEVICETYPE="Team"
+  TEAM_CONFIG='{"runner": {"name":"activebackup", "hwaddr_policy":"by_active"}, "link_watch": {"name":"ethtool"}}'
+
+  ## /etc/sysconfig/network-scripts/ifcfg-eth1
+  DEVICE=eth1
+  ONBOOT=yes
+  BOOTPROTO=none
+  NM_CONTROLLED=no
+  USERCTL=no
+  DEVICETYPE="TeamPort"
+  TEAM_MASTER="team0"
+  TEAM_PORT_CONFIG='{"prio":-100}'
+
+  ## /etc/sysconfig/network-scripts/ifcfg-eth2
+  DEVICE=eth2
+  ONBOOT=yes
+  BOOTPROTO=none
+  NM_CONTROLLED=no
+  USERCTL=no
+  DEVICETYPE="TeamPort"
+  TEAM_MASTER="team0"
+  TEAM_PORT_CONFIG='{"prio":-100}'

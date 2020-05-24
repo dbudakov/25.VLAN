@@ -1,0 +1,3 @@
+sysctl_name:
+  - { n: "net.ipv4.conf.all.proxy_arp", v: 1 }
+  - { n: "net.ipv4.conf.all.forwarding", v: 1 }

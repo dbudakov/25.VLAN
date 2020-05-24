@@ -1,0 +1,73 @@
+Bonding
+ Метод агрегации каналов в Linux
+  - работает на уровне ядра
+  - позволяет объединить 2 и более сетевых интерфейса в один логический
+  - позволяет обеспечить отказоустойчивость канала
+  - позволяет обеспечить разпределение нагрузки и балансировку
+  - позволяет увеличить пропускную способность
+
+  Режимы работы:
+   - Round Robin
+   - Active Backup
+   - XOR[exlusive OR]
+   - Broadcast
+   - Dynamic Link Aggregation
+   - Transmit Load Balancing(TLB)
+   - Adaptive Load Balancing(ALB)
+
+Проверка параметров bonding-интерфейса
+  cat /proc/net/bonding/bond0
+
+Модуль с помощью которого это реализуется
+  lsmod | grep bonding
+  modinfo bonding
+
+Настройка через NetworkManager
+  Просмотр сетевых интерфесов
+    nmcli con
+
+  Задаем интерфейс bond0, задаем режим и ip-адресов
+    nmcli con add type bond con-name bond0 ifname bond0 mode
+    active-backup ip4 10.16.10.7/24
+
+  Добавляем сетевые интерфейсы в логических интерфейсах
+    nmcli con add type bond-slave ifname eth0 master bond0
+    nmcli con add type bond-slave ifname eth1 master bond0
+
+  Последовательно поднимаем интерфейсы
+    nmcli con up bond-slave-eth0
+    nmcli con up bond-slave-eth1
+    nmcli connection up bond0
+
+
+Настройка с помощью конфигов
+  ## /etc/sysconfig/network-scripts/ipcfg-bond0
+  DEVICE=bond0
+  NAME=bond0
+  TYPE=Bond
+  BONDING_MASTER=yes
+  IPADDR=10.0.0.1
+  NETMASK=255.255.255.0
+  ONBOOT=yes
+  BOOTPROTO=static
+  BONDING_OPTS="mode1 miimon=100 fail_over_mac=1"
+  NM_CONTROLLED=no
+  USERCTL=no
+
+  ## /etc/sysconfig/network-scripts/ifcfg-eth1
+  DEVICE=eth1
+  ONBOOT=yes
+  BOOTPROTO=none
+  MASTER=bond0
+  SLAVE=yes
+  NM_CONTROLLED=no
+  USERCTL=no
+
+  ## /etc/sysconfig/network-scripts/ifcfg-eth2
+  DEVICE=eth2
+  ONBOOT=yes
+  BOOTPROTO=none
+  MASTER=bond0
+  SLAVE=yes
+  NM_CONTROLLED=no
+  USERCTL=no
