@@ -1,5 +1,11 @@
 #- name: Create VLAN15
 #  shell: nmcli con add type vlan con-name eth1.15 dev eth1 id 15 ip4 10.10.10.1/24 gw4 10.10.10.5
 
-- name: Create VLAN5
-  shell: nmcli con add type vlan con-name eth1.5 ifname eth1.5 dev eth1 id 5 ip4 10.10.10.1/24 gw4 10.10.10.6
+#- name: Create VLAN5
+#  shell: nmcli con add type vlan con-name eth1.5 ifname eth1.5 dev eth1 id 5 ip4 10.10.10.1/24 gw4 10.10.10.6
+
+- name:
+  shell: |
+    vconfig add eth1 5
+    ip add add 10.10.10.1/24 dev eth1.5
+    ip link set up dev eth1.5
