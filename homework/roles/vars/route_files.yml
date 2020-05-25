@@ -1,0 +1,9 @@
+route_files:
+  - /etc/sysconfig/network-scripts/rule-eth1.5
+  - /etc/sysconfig/network-scripts/rule-eth2.5
+  - /etc/sysconfig/network-scripts/rule-eth3.8
+  - /etc/sysconfig/network-scripts/rule-eth4.8
+  - /etc/sysconfig/network-scripts/route-eth1.5
+  - /etc/sysconfig/network-scripts/route-eth2.5
+  - /etc/sysconfig/network-scripts/route-eth3.8
+  - /etc/sysconfig/network-scripts/route-eth4.8

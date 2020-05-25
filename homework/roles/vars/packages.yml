@@ -1,3 +1,4 @@
 packages:
   - tcpdump
   - vconfig
+  - NetworkManager-config-routing-rules
