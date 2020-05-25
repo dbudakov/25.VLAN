@@ -3,9 +3,9 @@
 home = ENV['HOME']
 
 MACHINES = {
-#  :'inetRouter' => {
-#      :box_name => "centos/7",
-#  },
+  :'inetRouter' => {
+      :box_name => "centos/7",
+  },
   :'centralRouter' => {
       :box_name => "centos/7",
   },
@@ -38,7 +38,9 @@ Vagrant.configure("2") do |config|
             case boxname.to_s
             when "inetRouter"
               vb.customize ["modifyvm", :id, "--nic2", "intnet"]
-              vb.customize ["modifyvm", :id, "--intnet2", "office"]
+              vb.customize ["modifyvm", :id, "--intnet2", "bond"]
+              vb.customize ["modifyvm", :id, "--nic3", "intnet"]
+              vb.customize ["modifyvm", :id, "--intnet3", "bond"]
             when "centralRouter"
               vb.customize ["modifyvm", :id, "--nic2", "intnet"]
               vb.customize ["modifyvm", :id, "--intnet2", "testServer1"]
@@ -49,7 +51,9 @@ Vagrant.configure("2") do |config|
               vb.customize ["modifyvm", :id, "--nic5", "intnet"]
               vb.customize ["modifyvm", :id, "--intnet5", "testClient2"]
               vb.customize ["modifyvm", :id, "--nic6", "intnet"]
-              vb.customize ["modifyvm", :id, "--intnet6", "office"]
+              vb.customize ["modifyvm", :id, "--intnet6", "bond"]
+              vb.customize ["modifyvm", :id, "--nic7", "intnet"]
+              vb.customize ["modifyvm", :id, "--intnet7", "bond"]
             when "testServer1"
               vb.customize ["modifyvm", :id, "--nic2", "intnet"]
               vb.customize ["modifyvm", :id, "--intnet2", "testServer1"]

@@ -1,5 +1,6 @@
 - name: deploy
   hosts:
+    - inetRouter
     - centralRouter
     - testClient1
     - testServer1
@@ -11,4 +12,4 @@
     - role: roles
   tasks:
     - include: ../roles/tasks/all.yml
-    - include: ../roles/tasks/{{ inventory_hostname }}.yml
+#    - include: ../roles/tasks/{{ inventory_hostname }}.yml

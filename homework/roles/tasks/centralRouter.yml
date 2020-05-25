@@ -2,8 +2,8 @@
   include_vars:
     file: "{{ item }}"
   loop:
-     - ../roles/vars/sysctl_name.yml
-     - ../roles/vars/route_files.yml
+    - ../roles/vars/sysctl_name.yml
+    - ../roles/vars/route_files.yml
 
 #- name: Create VID 15 for testServer1
 #  shell: nmcli con add type vlan con-name eth1.15 ifname eth1.15 dev eth1 id 15 ip4 10.10.10.5/24
@@ -89,7 +89,7 @@
 #    ip ro add 10.10.10.254 via 10.10.10.6 dev eth4.8 table 8
 
 - name: add files for routing
-  file: 
+  file:
     path: "{{ item }}"
     state: touch
   with_items: "{{ route_files }}"
@@ -97,32 +97,32 @@
 - name: input file
   lineinfile:
     dest: /etc/sysconfig/network-scripts/rule-eth1.5
-    line: to 10.10.10.254 iif eth1.5 table 5 
+    line: to 10.10.10.254 iif eth1.5 table 5
 
 - name: input file
   lineinfile:
     dest: /etc/sysconfig/network-scripts/route-eth1.5
-    line: 10.10.10.254 via 10.10.10.6 dev eth2.5 table 5
-
-- name: input file
-  lineinfile:
-    dest: /etc/sysconfig/network-scripts/rule-eth2.5
-    line: to 10.10.10.1 iif eth2.5 table 5 
-
-- name: input file
-  lineinfile:
-    dest: /etc/sysconfig/network-scripts/route-eth2.5
     line: 10.10.10.1 via 10.10.10.5 dev eth1.5 table 5
 
 - name: input file
   lineinfile:
+    dest: /etc/sysconfig/network-scripts/rule-eth2.5
+    line: to 10.10.10.1 iif eth2.5 table 5
+
+- name: input file
+  lineinfile:
+    dest: /etc/sysconfig/network-scripts/route-eth2.5
+    line: 10.10.10.254 via 10.10.10.6 dev eth2.5 table 5
+
+- name: input file
+  lineinfile:
     dest: /etc/sysconfig/network-scripts/rule-eth3.8
-    line: to 10.10.10.254 iif eth3.8 table 8 
+    line: to 10.10.10.254 iif eth3.8 table 8
 
 - name: input file
   lineinfile:
     dest: /etc/sysconfig/network-scripts/route-eth3.8
-    line: 10.10.10.254 via 10.10.10.6 dev eth4.8 table 8
+    line: 10.10.10.1 via 10.10.10.5 dev eth3.8 table 8
 
 - name: input file
   lineinfile:
@@ -132,18 +132,22 @@
 - name: input file
   lineinfile:
     dest: /etc/sysconfig/network-scripts/route-eth4.8
-    line: 10.10.10.1 via 10.10.10.5 dev eth3.8 table 8
+    line: 10.10.10.254 via 10.10.10.6 dev eth4.8 table 8
 
 - name: start NetworkManager-dispatcher
   systemd:
     name: network
     state: restarted
     enabled: true
-
+#    nmcli con add type bond con-name bond0 ifname bond0 mode active-backup ip4 10.10.15.2/24
+#    nmcli con add type bond-slave ifname eth5 master bond0
+#    nmcli con add type bond-slave ifname eth6 master bond0
+#    nmcli con up bond-slave-eth5
+#    nmcli con up bond-slave-eth6
+#    nmcli connection up bond0
 
 #    /etc/sysconfig/network-scripts/rule-eth1.5
 #    to 10.10.10.254 iif eth1.5 table table5
 #
 #    /etc/sysconfig/network-scripts/route-eth1.5
 #    10.10.10.1 via 10.10.10.5 dev eth1.5 table table5
-
