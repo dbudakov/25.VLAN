@@ -8,19 +8,19 @@ MACHINES = {
   },
   :'centralRouter' => {
       :box_name => "centos/7",
-  },
-  :'testClient1' => {
-      :box_name => "centos/7",
-  },
-  :'testServer1' => {
-    :box_name => "centos/7",
-  },
-  :'testClient2' => {
-      :box_name => "centos/7",
-  },
-  :'testServer2' => {
-    :box_name => "centos/7",
   }
+#  :'testClient1' => {
+#      :box_name => "centos/7",
+#  },
+#  :'testServer1' => {
+#    :box_name => "centos/7",
+#  },
+#  :'testClient2' => {
+#      :box_name => "centos/7",
+#  },
+#  :'testServer2' => {
+#    :box_name => "centos/7",
+#  }
 }
 
 Vagrant.configure("2") do |config|
