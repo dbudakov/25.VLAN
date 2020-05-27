@@ -1,3 +1,6 @@
 packages:
   - tcpdump
+
+central_packages:
+  - tcpdump
   - NetworkManager-config-routing-rules

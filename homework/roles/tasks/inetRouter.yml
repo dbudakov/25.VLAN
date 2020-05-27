@@ -6,5 +6,3 @@
     nmcli con up bond-slave-eth1
     nmcli con up bond-slave-eth2
     nmcli connection up bond0
-
-nmcli connection delete <uuid>

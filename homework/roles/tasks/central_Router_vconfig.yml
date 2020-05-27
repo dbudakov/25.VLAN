@@ -1,0 +1,23 @@
+#- name:
+#  shell: |
+#    vconfig add eth1 5
+#    ip add add 10.10.10.5/24 dev eth1.5
+#    ip link set up dev eth1.5
+
+#- name:
+#  shell: |
+#    vconfig add eth2 5
+#    ip add add 10.10.10.6/24 dev eth2.5
+#    ip link set up dev eth2.5
+
+#- name:
+#  shell: |
+#    vconfig add eth3 8
+#    ip add add 10.10.10.5/24 dev eth3.8
+#    ip link set up dev eth3.8
+
+#- name:
+#  shell: |
+#    vconfig add eth4 8
+#    ip add add 10.10.10.6/24 dev eth4.8
+#    ip link set up dev eth4.8

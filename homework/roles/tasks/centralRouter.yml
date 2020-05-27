@@ -2,26 +2,14 @@
   include_vars:
     file: "{{ item }}"
   loop:
+    - ../roles/vars/packages.yml
     - ../roles/vars/sysctl_name.yml
     - ../roles/vars/route_files.yml
 
-#- name: Create VID 15 for testServer1
-#  shell: nmcli con add type vlan con-name eth1.15 ifname eth1.15 dev eth1 id 15 ip4 10.10.10.5/24
-#
-#- name: Create VID 15 for testClient1
-#  shell: nmcli con add type vlan con-name eth2.15 ifname eth2.15 dev eth2 id 15 ip4 10.10.10.6/24
-#
-#- name: Create VID 25 for testServer2
-#  shell: nmcli con add type vlan con-name eth3.15 ifname eth3.25 dev eth3 id 25 ip4 10.10.10.5/24
-#
-#- name: Create VID 25 for testClient2
-#  shell: nmcli con add type vlan con-name eth4.15 ifname eth4.25 dev eth4 id 25 ip4 10.10.10.6/24
-
-#- name: Set ipv4.proxy - true
-#  sysctl:
-#    name: "{{ sysctl_name }}"
-#    value: "1"
-#    sysctl_set: yes
+- name: install packages
+  yum:
+    name: "{{ central_packages }}"
+    state: present
 
 - name: Set ipv4.proxy - true
   sysctl:
@@ -49,44 +37,6 @@
 
 - name: Create VID8 for testClient2
   shell: nmcli con add type vlan con-name eth4.8 ifname eth4.8 dev eth4 id 8 ip4 10.10.10.6/24
-
-#- name:
-#  shell: |
-#    vconfig add eth1 5
-#    ip add add 10.10.10.5/24 dev eth1.5
-#    ip link set up dev eth1.5
-
-#- name:
-#  shell: |
-#    vconfig add eth2 5
-#    ip add add 10.10.10.6/24 dev eth2.5
-#    ip link set up dev eth2.5
-
-#- name:
-#  shell: |
-#    vconfig add eth3 8
-#    ip add add 10.10.10.5/24 dev eth3.8
-#    ip link set up dev eth3.8
-
-#- name:
-#  shell: |
-#    vconfig add eth4 8
-#    ip add add 10.10.10.6/24 dev eth4.8
-#    ip link set up dev eth4.8
-
-#- name: Route for VID5
-#  shell: |
-#    ip ru add to 10.10.10.254 iif eth1.5 table 5
-#    ip ru add to 10.10.10.1 iif eth2.5 table 5
-#    ip ro add 10.10.10.1 via 10.10.10.5 dev eth1.5 table 5
-#    ip ro add 10.10.10.254 via 10.10.10.6 dev eth2.5 table 5
-
-#- name: Route for VID8
-#  shell: |
-#    ip ru add to 10.10.10.254 iif eth3.8 table 8
-#    ip ru add to 10.10.10.1 iif eth4.8 table 8
-#    ip ro add 10.10.10.1 via 10.10.10.5 dev eth3.8 table 8
-#    ip ro add 10.10.10.254 via 10.10.10.6 dev eth4.8 table 8
 
 - name: add files for routing
   file:
@@ -142,15 +92,9 @@
 
 - name: Create bond
   shell: |
-    nmcli con add type bond con-name bond0 ifname bond0 mode active-backup +bond.option fail_over_mac=1 ip4 10.10.15.1/24
+    nmcli con add type bond con-name bond0 ifname bond0 mode active-backup +bond.option fail_over_mac=1 ip4 10.10.15.2/24
     nmcli con add type bond-slave ifname eth5 master bond0
     nmcli con add type bond-slave ifname eth6 master bond0
     nmcli con up bond-slave-eth5
     nmcli con up bond-slave-eth6
     nmcli connection up bond0
-
-#    /etc/sysconfig/network-scripts/rule-eth1.5
-#    to 10.10.10.254 iif eth1.5 table table5
-#
-#    /etc/sysconfig/network-scripts/route-eth1.5
-#    10.10.10.1 via 10.10.10.5 dev eth1.5 table table5
