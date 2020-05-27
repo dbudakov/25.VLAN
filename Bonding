@@ -39,6 +39,9 @@ Bonding
     nmcli con up bond-slave-eth1
     nmcli connection up bond0
 
+  Удаление канала:
+    nmcli connection delete <uuid>
+
 
 Настройка с помощью конфигов
   ## /etc/sysconfig/network-scripts/ipcfg-bond0
