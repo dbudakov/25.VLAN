@@ -16,7 +16,7 @@ testClient2 <-> testServer2
 проверить работу c отключением интерфейсов
 
 ## Решение
-![vlan] https://github.com/dbudakov/25.VLAN/blob/master/images/homework/VLAN.jpg
+![vlan]: https://github.com/dbudakov/25.VLAN/blob/master/images/homework/VLAN.jpg
 
 `testClient*` и `testServer*` не пингуют шлюзы на `centralRouter'e` и до указанных VM не пройдет трафик исходящий от `centalRouter`. Доступ настроен сквозь `centralRouter` между `testClient1`<-->`testServer1` и `testClient2`<-->`testServer2` соответственно. Шлюзы не пингуются, так как для них нет правил маршрутизации, но назначаются правила маршрутизации входящего трафика, по каждому `vlan'у` и уже в таблицах указывается маршрут через какие интерфейсы этот маршрут доступен.  
 ```
